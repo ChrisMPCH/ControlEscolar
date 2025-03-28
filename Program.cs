@@ -1,18 +1,23 @@
 using System.Security.Cryptography;
 using ControlEscolar.View;
+using NLog;
+using ControlEscolar.Utilities;
 
 namespace ControlEscolar
 {
     internal static class Program
     {
+        private static Logger? _Logger;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            //Inicializa la configuracion del sistema de log
+            _Logger = LoggingManager.GetLogger("ControlEscolar.program");
+            _Logger.Info("Starting application");
+
             ApplicationConfiguration.Initialize();
             // Application.Run(new View.Login());
 
@@ -23,6 +28,9 @@ namespace ControlEscolar
             {
                 Application.Run(new MDI_Cotrol_escolar());
             }
+
+
+
         }
     }
 }

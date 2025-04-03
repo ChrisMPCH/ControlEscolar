@@ -20,7 +20,7 @@ namespace ControlEscolar.Data
         private static readonly Logger _logger = LoggingManager.GetLogger("ControlEscolar.Data.PostgreSQLDataAccess");
 
         //Cadena de conexión desde App.config
-        private readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConexionBD"].ConnectionString;
+        private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConexionBD"].ConnectionString;
 
         private NpgsqlConnection _connection;
         private static PosgresSQLAccess? _instance;
@@ -166,6 +166,10 @@ namespace ControlEscolar.Data
             return command;
         }
 
-
+        public NpgsqlParameter CreateParameter(string name, Object value)
+        {
+            //Método para crear un parámetro de Npgsql con un nombre y valor específico y manejo de valores nulos
+            return new NpgsqlParameter(name, value ?? DBNull.Value);
+        }
     }
 }

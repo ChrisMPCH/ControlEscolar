@@ -52,6 +52,15 @@ namespace ControlEscolar.Model
             FechaNacimiento = null;
             Estatus = true; //vacío
         }
+
+        public Personas(string nombreCompleto, string correo, string telefono, string curp)
+        {
+            NombreCompleto = nombreCompleto;
+            Correo = correo;
+            Telefono = telefono;
+            Curp = curp;
+        }
+
         public Personas(int id, string nombreCompleto, string correo, string telefono, string curp, DateTime? fechaNacimiento, bool estatus)
         {
             Id = id;

@@ -58,8 +58,10 @@
             txtNombre = new TextBox();
             lblNombre = new Label();
             panel2 = new Panel();
+            dgvEstudiantes = new DataGridView();
             flowLayoutPanel1 = new FlowLayoutPanel();
             panel1 = new Panel();
+            lblTotalRegister = new Label();
             btnActiualizar = new FontAwesome.Sharp.IconButton();
             txtBusquedaTexto = new TextBox();
             lblBusquedaTexto = new Label();
@@ -89,6 +91,7 @@
             ((System.ComponentModel.ISupportInitialize)pbQuestion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudSemestre).BeginInit();
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvEstudiantes).BeginInit();
             panel1.SuspendLayout();
             pnlHerramientas.SuspendLayout();
             SuspendLayout();
@@ -118,7 +121,6 @@
             // scEstudiantes.Panel2
             // 
             scEstudiantes.Panel2.Controls.Add(panel2);
-            scEstudiantes.Panel2.Paint += scEstudiantes_Panel2_Paint;
             scEstudiantes.Size = new Size(1012, 656);
             scEstudiantes.SplitterDistance = 299;
             scEstudiantes.TabIndex = 3;
@@ -375,6 +377,7 @@
             // panel2
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel2.Controls.Add(dgvEstudiantes);
             panel2.Controls.Add(flowLayoutPanel1);
             panel2.Controls.Add(panel1);
             panel2.Controls.Add(pnlHerramientas);
@@ -382,6 +385,15 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(701, 656);
             panel2.TabIndex = 2;
+            // 
+            // dgvEstudiantes
+            // 
+            dgvEstudiantes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvEstudiantes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvEstudiantes.Location = new Point(4, 234);
+            dgvEstudiantes.Name = "dgvEstudiantes";
+            dgvEstudiantes.Size = new Size(685, 419);
+            dgvEstudiantes.TabIndex = 3;
             // 
             // flowLayoutPanel1
             // 
@@ -394,6 +406,7 @@
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(lblTotalRegister);
             panel1.Controls.Add(btnActiualizar);
             panel1.Controls.Add(txtBusquedaTexto);
             panel1.Controls.Add(lblBusquedaTexto);
@@ -406,8 +419,17 @@
             panel1.Controls.Add(lblFiltros);
             panel1.Location = new Point(3, 79);
             panel1.Name = "panel1";
-            panel1.Size = new Size(698, 107);
+            panel1.Size = new Size(698, 149);
             panel1.TabIndex = 1;
+            // 
+            // lblTotalRegister
+            // 
+            lblTotalRegister.AutoSize = true;
+            lblTotalRegister.Location = new Point(17, 126);
+            lblTotalRegister.Name = "lblTotalRegister";
+            lblTotalRegister.Size = new Size(93, 15);
+            lblTotalRegister.TabIndex = 33;
+            lblTotalRegister.Text = "Registros totales";
             // 
             // btnActiualizar
             // 
@@ -416,7 +438,7 @@
             btnActiualizar.IconColor = Color.Black;
             btnActiualizar.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnActiualizar.IconSize = 24;
-            btnActiualizar.Location = new Point(483, 73);
+            btnActiualizar.Location = new Point(479, 73);
             btnActiualizar.Name = "btnActiualizar";
             btnActiualizar.Size = new Size(96, 29);
             btnActiualizar.TabIndex = 32;
@@ -429,7 +451,7 @@
             // txtBusquedaTexto
             // 
             txtBusquedaTexto.Anchor = AnchorStyles.Left;
-            txtBusquedaTexto.Location = new Point(136, 79);
+            txtBusquedaTexto.Location = new Point(132, 79);
             txtBusquedaTexto.MaxLength = 255;
             txtBusquedaTexto.Name = "txtBusquedaTexto";
             txtBusquedaTexto.Size = new Size(275, 23);
@@ -439,7 +461,7 @@
             // 
             lblBusquedaTexto.Anchor = AnchorStyles.Left;
             lblBusquedaTexto.AutoSize = true;
-            lblBusquedaTexto.Location = new Point(21, 82);
+            lblBusquedaTexto.Location = new Point(17, 82);
             lblBusquedaTexto.Name = "lblBusquedaTexto";
             lblBusquedaTexto.Size = new Size(109, 15);
             lblBusquedaTexto.TabIndex = 31;
@@ -449,7 +471,7 @@
             // 
             dateInicio.Anchor = AnchorStyles.Left;
             dateInicio.Format = DateTimePickerFormat.Short;
-            dateInicio.Location = new Point(322, 42);
+            dateInicio.Location = new Point(318, 42);
             dateInicio.Name = "dateInicio";
             dateInicio.Size = new Size(113, 23);
             dateInicio.TabIndex = 30;
@@ -459,7 +481,7 @@
             cmbxTipoFecha.Anchor = AnchorStyles.Left;
             cmbxTipoFecha.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbxTipoFecha.FormattingEnabled = true;
-            cmbxTipoFecha.Location = new Point(92, 42);
+            cmbxTipoFecha.Location = new Point(88, 42);
             cmbxTipoFecha.Name = "cmbxTipoFecha";
             cmbxTipoFecha.Size = new Size(96, 23);
             cmbxTipoFecha.TabIndex = 22;
@@ -468,7 +490,7 @@
             // 
             label7.Anchor = AnchorStyles.Left;
             label7.AutoSize = true;
-            label7.Location = new Point(21, 45);
+            label7.Location = new Point(17, 45);
             label7.Name = "label7";
             label7.Size = new Size(65, 15);
             label7.TabIndex = 29;
@@ -478,7 +500,7 @@
             // 
             label6.Anchor = AnchorStyles.Left;
             label6.AutoSize = true;
-            label6.Location = new Point(246, 45);
+            label6.Location = new Point(242, 45);
             label6.Name = "label6";
             label6.Size = new Size(70, 15);
             label6.TabIndex = 28;
@@ -488,7 +510,7 @@
             // 
             label5.Anchor = AnchorStyles.Left;
             label5.AutoSize = true;
-            label5.Location = new Point(483, 47);
+            label5.Location = new Point(479, 47);
             label5.Name = "label5";
             label5.Size = new Size(57, 15);
             label5.TabIndex = 27;
@@ -498,7 +520,7 @@
             // 
             dateFin.Anchor = AnchorStyles.Left;
             dateFin.Format = DateTimePickerFormat.Short;
-            dateFin.Location = new Point(546, 42);
+            dateFin.Location = new Point(542, 42);
             dateFin.Name = "dateFin";
             dateFin.Size = new Size(113, 23);
             dateFin.TabIndex = 22;
@@ -573,7 +595,6 @@
             lblHerramientas.Size = new Size(78, 15);
             lblHerramientas.TabIndex = 22;
             lblHerramientas.Text = "Herramientas";
-            lblHerramientas.Click += label1_Click;
             // 
             // label4
             // 
@@ -611,7 +632,6 @@
             MinimumSize = new Size(1028, 768);
             Name = "frmEstudiantes";
             Text = "frmEstudiantes";
-            Load += frmEstudiantes_Load;
             scEstudiantes.Panel1.ResumeLayout(false);
             scEstudiantes.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)scEstudiantes).EndInit();
@@ -623,6 +643,7 @@
             ((System.ComponentModel.ISupportInitialize)pbQuestion).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudSemestre).EndInit();
             panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvEstudiantes).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             pnlHerramientas.ResumeLayout(false);
@@ -681,5 +702,7 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private Panel pnlNoControl;
         private OpenFileDialog ofdArchivo;
+        private DataGridView dgvEstudiantes;
+        private Label lblTotalRegister;
     }
 }

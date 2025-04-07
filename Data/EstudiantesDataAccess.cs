@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ControlEscolar.Controller;
 using ControlEscolar.Model;
 using ControlEscolar.Utilities;
 using NLog;
@@ -29,7 +30,7 @@ namespace ControlEscolar.Data
                 _dbAccess = PosgresSQLAccess.GetInstance();
                 _personasDataAccess = new PersonasDataAccess();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Error(ex, "Error al intentar crear instancia de EstudiantesDataAccess");
                 throw;
@@ -130,5 +131,163 @@ namespace ControlEscolar.Data
                 _dbAccess.Disconnect();
             }
         }
+
+        public int InsertarEstudiante(Estudiantes estudiantes)
+        {
+            try
+            {
+                int idPersona = _personasDataAccess.InsertarPersona(estudiantes.DatosPersonales);
+
+                if (idPersona <= 0)
+                {
+                    _logger.Error($"NO se pudo insertar la persona para el estudiante {estudiantes.Matricula}");
+                }
+
+                estudiantes.IdPersona = idPersona;
+
+                string query = @"
+                    INSERT INTO escolar.estudiantes (id_persona, matricula, semestre, fecha_alta, estatus)
+                    VALUES (@idPersona, @matricula, @semestre, @fechaAlta, @estatus)
+                    RETURNING id";
+
+                //Crear los parámetros
+                NpgsqlParameter paramIdPersona = _dbAccess.CreateParameter("@idPersona", estudiantes.IdPersona);
+                NpgsqlParameter paramMatricula = _dbAccess.CreateParameter("@matricula", estudiantes.Matricula);
+                NpgsqlParameter paramSemestre = _dbAccess.CreateParameter("@semestre", estudiantes.Semestre);
+                NpgsqlParameter paramFechaAlta = _dbAccess.CreateParameter("@fechaAlta", estudiantes.FechaAlta);
+                NpgsqlParameter paramEstatus = _dbAccess.CreateParameter("@estatus", estudiantes.Estatus);
+
+                //Conexion
+                _dbAccess.Connect();
+
+                //Ejecutar la consulta, con ExecuteScalar que es para obtener un solo valor de la consulta 
+                object? resultado = _dbAccess.ExecuteScalar(query, paramIdPersona, paramMatricula, paramSemestre, paramFechaAlta, paramEstatus);
+
+                //convertir el resulado en entero
+                int idEstudiante = Convert.ToInt32(resultado);
+                _logger.Info($"Estudiante insertado con ID: {idEstudiante}");
+
+                return idEstudiante;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"Error al insertar Estudiante con matricula {estudiantes.Matricula}");
+                return -1;
+            }
+            finally
+            {
+                _dbAccess.Disconnect();
+            }
+        }
+
+        /// <summary>
+        /// Verifica si una matricula ya está registrada en la base de datos.
+        /// </summary>
+        /// <param name="matricula">Matricula a verificar</param>
+        /// <returns>True si la matricula ya existe, false en caso contrario</returns>
+        public bool ExisteMatricula(string matricula)
+        {
+            try
+            {
+                string query = "SELECT COUNT(*) FROM escolar.estudiantes WHERE matricula = @Matricula";
+
+                // Crea el parámetro
+                NpgsqlParameter paramMatricula = _dbAccess.CreateParameter("@Matricula", matricula);
+
+                // Establece la conexión a la BD
+                _dbAccess.Connect();
+
+                // Ejecuta la consulta
+                object? resultado = _dbAccess.ExecuteScalar(query, paramMatricula);
+
+                int cantidad = Convert.ToInt32(resultado);
+                bool existe = cantidad > 0;
+
+                return existe;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"Error al verificar la existencia de la matricula {matricula}");
+                return false;
+            }
+            finally
+            {
+                // Asegura que se cierre la conexión
+                _dbAccess.Disconnect();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene un objeto Estudiante si se encuentra, null si no existe.
+        /// </summary>
+        public Estudiantes? ObtenerEstudiantePorId(int id)
+        {
+            try
+            {
+                string query = @"
+                SELECT e.id, e.matricula, e.semestre, e.fecha_alta, e.fecha_baja, e.estatus,
+                       e.id_persona, p.nombre_completo, p.correo, p.telefono, p.fecha_nacimiento, 
+                       p.curp, p.estatus as estatus_persona
+                FROM escol.ar_estudiantes e
+                INNER JOIN seguridad.personas p ON e.id_persona = p.id
+                WHERE e.id = @Id";
+
+                // Crea el parámetro
+                NpgsqlParameter paramId = _dbAccess.CreateParameter("@Id", id);
+
+                // Establece la conexión a la BD
+                _dbAccess.Connect();
+
+                // Ejecuta la consulta con el parámetro
+                DataTable resultado = _dbAccess.ExecuteQuery_Reader(query, paramId);
+
+                if (resultado.Rows.Count == 0)
+                {
+                    _logger.Warn($"No se encontró ningún estudiante con ID {id}");
+                    return null;
+                }
+
+                // Obtiene la primera fila (debería ser la única)
+                DataRow row = resultado.Rows[0];
+
+                // Crear el objeto Persona
+                Personas persona = new Personas(
+                    Convert.ToInt32(row["id_persona"]),
+                    row["nombre_completo"].ToString() ?? "",
+                    row["correo"].ToString() ?? "",
+                    row["telefono"].ToString() ?? "",
+                    row["curp"].ToString() ?? "",
+                    row["fecha_nacimiento"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["fecha_nacimiento"]) : null,
+                    Convert.ToBoolean(row["estatus_persona"])
+                );
+
+                // Crear el objeto Estudiante
+                Estudiantes estudiante = new Estudiantes(
+                    Convert.ToInt32(row["id"]),
+                    Convert.ToInt32(row["id_persona"]),
+                    row["matricula"].ToString() ?? "",
+                    row["semestre"].ToString() ?? "",
+                    Convert.ToDateTime(row["fecha_alta"]),
+                    row["fecha_baja"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["fecha_baja"]) : null,
+                    Convert.ToInt32(row["estatus"]),
+                    row["descestatus_estudiante"].ToString() ?? "Desconocido",
+                    persona
+                );
+
+                return estudiante;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"Error al obtener el estudiante con ID {id}");
+                return null;
+            }
+            finally
+            {
+                // Asegura que se cierre la conexión
+                _dbAccess.Disconnect();
+            }
+        }
+
     }
 }

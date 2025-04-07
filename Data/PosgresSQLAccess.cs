@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ControlEscolar.Utilities;
 using NLog;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace ControlEscolar.Data
 {
@@ -33,7 +34,7 @@ namespace ControlEscolar.Data
                 _connection = new NpgsqlConnection(_connectionString);
                 _logger.Info("Instancia de acceso a datos creada correctamente");
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 _logger.Fatal("Error al intentar conectar a la base de datos");
                 throw; //El throw sin argumentos mantiene la excepción original
@@ -72,7 +73,7 @@ namespace ControlEscolar.Data
         }
 
         //Método para cerrar la conexión a la base de datos
-        public bool Disconnect() 
+        public bool Disconnect()
         {
             try
             {
@@ -166,10 +167,22 @@ namespace ControlEscolar.Data
             return command;
         }
 
-        public NpgsqlParameter CreateParameter(string name, Object value)
+        // === METODOS PARA EJECUTAR PROCEDIMIENTOS ALMACENADOS ===
+
+        public NpgsqlParameter CreateParameter(string name, object value)
         {
-            //Método para crear un parámetro de Npgsql con un nombre y valor específico y manejo de valores nulos
             return new NpgsqlParameter(name, value ?? DBNull.Value);
+        }
+
+        /// <summary>
+        /// Crea un parametro de salida OUTPUT para un procedimiento almacenado
+        /// </summary>
+
+        public NpgsqlParameter CreateOutputParameter(string name, NpgsqlDbType type)
+        {
+            NpgsqlParameter parameter = new NpgsqlParameter(name, type);
+            parameter.Direction = ParameterDirection.Output;
+            return parameter;
         }
     }
 }

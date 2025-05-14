@@ -1,4 +1,4 @@
-﻿using ControlEscolar.Utilities;
+﻿using Core.Utilities;
 using System.Text.RegularExpressions;
 
 

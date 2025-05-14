@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using ControlEscolar.View;
 using NLog;
-using ControlEscolar.Utilities;
+using Core.Utilities;
 
 namespace ControlEscolar
 {
@@ -21,16 +21,12 @@ namespace ControlEscolar
             ApplicationConfiguration.Initialize();
             // Application.Run(new View.Login());
 
-
             //INCIA LA APLIACION CON LA VENTANA DE INICIO 
             Login login_form = new Login();
             if (login_form.ShowDialog()== DialogResult.OK)
             {
                 Application.Run(new MDI_Cotrol_escolar());
             }
-
-
-
         }
     }
 }

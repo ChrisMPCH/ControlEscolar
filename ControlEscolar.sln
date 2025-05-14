@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlEscolar", "ControlEscolar.csproj", "{BABC001E-01E9-4484-B1E1-01E70EAC02E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Users\chris\source\repos\Core\Core.csproj", "{FEC20422-30A3-48EE-8D4D-89FD6A0B39F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api_estudiantes_test", "..\Users\chris\source\repos\Api_estudiantes_test\Api_estudiantes_test.csproj", "{D1159D06-C0A9-407A-8F11-2718D0BEB1F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +19,19 @@ Global
 		{BABC001E-01E9-4484-B1E1-01E70EAC02E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BABC001E-01E9-4484-B1E1-01E70EAC02E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BABC001E-01E9-4484-B1E1-01E70EAC02E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC20422-30A3-48EE-8D4D-89FD6A0B39F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC20422-30A3-48EE-8D4D-89FD6A0B39F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC20422-30A3-48EE-8D4D-89FD6A0B39F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC20422-30A3-48EE-8D4D-89FD6A0B39F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1159D06-C0A9-407A-8F11-2718D0BEB1F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1159D06-C0A9-407A-8F11-2718D0BEB1F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1159D06-C0A9-407A-8F11-2718D0BEB1F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1159D06-C0A9-407A-8F11-2718D0BEB1F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7863BA79-7A7F-4E63-ADE8-FC333967632C}
 	EndGlobalSection
 EndGlobal

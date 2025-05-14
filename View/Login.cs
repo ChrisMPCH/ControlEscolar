@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ControlEscolar.Bussines;
 using ControlEscolar.Utilities;
+using Core.Utilities;
 using NLog;
 
 namespace ControlEscolar.View

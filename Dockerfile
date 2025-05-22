@@ -1,13 +1,16 @@
+# Etapa de construcción
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
+
+# Copia solo los archivos necesarios (mejor práctica)
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copia el resto y publica
 COPY . ./
+RUN dotnet publish -c Release -o out --no-restore
 
-# Solo necesario si no puedes modificar el .csproj:
-# RUN dotnet publish "ControlEscolar.csproj" -c Release -o out -p:EnableWindowsTargeting=true
-
-# Idealmente después de modificar el .csproj:
-RUN dotnet publish "ControlEscolar.csproj" -c Release -o out
-
+# Etapa final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .

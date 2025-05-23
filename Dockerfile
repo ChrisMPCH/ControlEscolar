@@ -2,13 +2,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia todo el contenido del repo
 COPY . .
 
-# Cambia a la carpeta donde está la solución
+# Cambia el directorio de trabajo a donde está la solución
 WORKDIR /src/ControlEscolar
 
-# Restaura y publica la solución
+# Restaura y publica usando la ruta relativa correcta
 RUN dotnet restore ControlEscolar.sln
 RUN dotnet publish ControlEscolar.sln -c Release -o /app/out
 

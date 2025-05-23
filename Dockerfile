@@ -1,20 +1,12 @@
 # Etapa de construcción
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# Copiar toda la solución primero
+# Copia todo
 COPY . ./
 
-# Listar los directorios para depuración
-RUN ls -la
-
-# Intentar construir solo el proyecto API
-RUN find . -name "Api_estudiantes_test.csproj" -exec dotnet publish {} -c Release -o /app/out \;
-
-# Si lo anterior falla, intentar buscar la API por nombre
-RUN if [ ! -d /app/out ]; then \
-    find . -name "*.csproj" | grep -i api | xargs -I {} dotnet publish {} -c Release -o /app/out; \
-    fi
+# Publica la solución (ajusta el nombre si tu .sln es diferente)
+RUN dotnet publish ControlEscolar.sln -c Release -o /app/out
 
 # Etapa final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
@@ -23,8 +15,8 @@ COPY --from=build /app/out .
 EXPOSE 80
 EXPOSE 443
 
-# Buscar el nombre exacto del DLL de la API
+# Busca el DLL principal de la API
 RUN find . -name "*.dll" | grep -i api
 
-# Entrypoint dinámico que busca el archivo API.dll
+# Entrypoint dinámico
 ENTRYPOINT ["sh", "-c", "dotnet $(find . -name \"*API.dll\" | head -1)"]

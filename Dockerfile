@@ -1,12 +1,14 @@
-# Etapa de construcción
+# Etapa de build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY . ./
+# Copia todo el contenido del repo
+COPY . .
 
-# Cambia el directorio de trabajo a la raíz del repo (donde está el .sln)
-WORKDIR /src
+# Cambia a la carpeta donde está la solución
+WORKDIR /src/ControlEscolar
 
+# Restaura y publica la solución
 RUN dotnet restore ControlEscolar.sln
 RUN dotnet publish ControlEscolar.sln -c Release -o /app/out
 

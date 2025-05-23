@@ -2,12 +2,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ControlEscolar/ ./ControlEscolar/
+COPY . .
 
-WORKDIR /src/ControlEscolar
+WORKDIR /src/ControlEscolar/Api_estudiantes_test
 
-RUN dotnet restore ControlEscolar.sln
-RUN dotnet publish ControlEscolar.sln -c Release -o /app/out
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/out
 
 # Etapa final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
@@ -16,6 +16,4 @@ COPY --from=build /app/out .
 EXPOSE 80
 EXPOSE 443
 
-RUN find . -name "*.dll" | grep -i api
-
-ENTRYPOINT ["sh", "-c", "dotnet $(find . -name \"*API.dll\" | head -1)"]
+ENTRYPOINT ["dotnet", "Api_estudiantes_test.dll"]

@@ -2,7 +2,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY . .
+COPY ControlEscolar/ ./ControlEscolar/
+
+WORKDIR /src/ControlEscolar
 
 RUN dotnet restore ControlEscolar.sln
 RUN dotnet publish ControlEscolar.sln -c Release -o /app/out

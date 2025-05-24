@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using ControlEscolar.View;
 using NLog;
-using ControlEscolar.Utilities;
+using CORE.Utilities;
 
 namespace ControlEscolar
 {

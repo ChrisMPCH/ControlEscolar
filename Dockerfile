@@ -2,6 +2,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
+# Crear directorio para el proyecto
+RUN mkdir -p API_Estudiantes_Test
+
 # Copiar archivos de solución y proyecto
 COPY *.sln .
 COPY API_Estudiantes_Test/*.csproj ./API_Estudiantes_Test/

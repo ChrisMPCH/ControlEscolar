@@ -4,11 +4,11 @@ WORKDIR /app
 
 # Copiar archivos de solución y proyecto
 COPY *.sln .
-COPY API_Estudiantes_Test/API_Estudiantes_Test.csproj ./API_Estudiantes_Test/
+COPY API_Estudiantes_Test/*.csproj ./API_Estudiantes_Test/
 RUN dotnet restore
 
 # Copiar todo el código fuente
-COPY . ./
+COPY . .
 
 # Publicar la aplicación
 WORKDIR /app/API_Estudiantes_Test

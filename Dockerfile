@@ -1,30 +1,29 @@
-# Etapa de construcción
+# Etapa build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copiar toda la solución primero
+# Copiar archivos de solución y proyecto
+COPY *.sln .
+COPY API_Estudiantes_Test/API_Estudiantes_Test.csproj ./API_Estudiantes_Test/
+RUN dotnet restore
+
+# Copiar todo el código fuente
 COPY . ./
 
-# Listar los directorios para depuración
-RUN ls -la
+# Publicar la aplicación
+WORKDIR /app/API_Estudiantes_Test
+RUN dotnet publish -c Release -o /app/out
 
-# Intentar construir solo el proyecto API
-RUN find . -name "API_Estudiantes_Test.csproj" -exec dotnet publish {} -c Release -o /app/out \;
-
-# Si lo anterior falla, intentar buscar la API por nombre
-RUN if [ ! -d /app/out ]; then \
-    find . -name "*.csproj" | grep -i api | xargs -I {} dotnet publish {} -c Release -o /app/out; \
-    fi
-
-# Etapa final
+# Etapa runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
+
+# Copiar los archivos publicados desde la etapa build
 COPY --from=build /app/out .
+
+# Exponer puertos HTTP y HTTPS
 EXPOSE 80
 EXPOSE 443
 
-# Buscar el nombre exacto del DLL de la API
-RUN find . -name "*.dll" | grep -i api
-
-# Entrypoint dinámico que busca el archivo API.dll
-ENTRYPOINT ["sh", "-c", "dotnet $(find . -name \"*API.dll\" | head -1)"]
+# Comando para iniciar la aplicación
+ENTRYPOINT ["dotnet", "API_Estudiantes_Test.dll"]

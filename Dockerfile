@@ -2,21 +2,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copiar toda la solución
-COPY . ./
+# Copiar el proyecto API_Estudiantes_Test
+COPY API_Estudiantes_Test/API_Estudiantes_Test.csproj ./API_Estudiantes_Test/
+COPY CORE/CORE.csproj ./CORE/
 
-# Listar contenido para depuración
-RUN ls -la
+# Restaurar dependencias
+RUN dotnet restore API_Estudiantes_Test/API_Estudiantes_Test.csproj
 
-# Restaurar dependencias y publicar la API
-RUN dotnet restore "API_Estudiantes_Test/API_Estudiantes_Test.csproj" || \
-    dotnet restore "*/API_Estudiantes_Test.csproj" || \
-    echo "No se encontró el proyecto API_Estudiantes_Test.csproj"
+# Copiar el resto del código fuente
+COPY API_Estudiantes_Test/ ./API_Estudiantes_Test/
+COPY CORE/ ./CORE/
 
 # Publicar la API
-RUN dotnet publish "API_Estudiantes_Test/API_Estudiantes_Test.csproj" -c Release -o /app/out || \
-    dotnet publish "*/API_Estudiantes_Test.csproj" -c Release -o /app/out || \
-    echo "No se pudo publicar el proyecto API"
+RUN dotnet publish API_Estudiantes_Test/API_Estudiantes_Test.csproj -c Release -o /app/out
 
 # Verificar que se generó un archivo DLL válido
 RUN ls -la /app/out

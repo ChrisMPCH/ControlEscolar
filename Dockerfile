@@ -1,19 +1,25 @@
-# Etapa de build
+# Etapa build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+WORKDIR /app
 
-COPY . .
-
-WORKDIR /src/ControlEscolar/Api_estudiantes_test
-
+# Copiar archivo de proyecto y restaurar dependencias
+COPY ControlEscolar.csproj ./
 RUN dotnet restore
-RUN dotnet publish -c Release -o /app/out
 
-# Etapa final
+# Copiar todo el código fuente y publicar en modo Release en /app/out
+COPY . ./
+RUN dotnet publish ControlEscolar.csproj -c Release -o /app/out
+
+# Etapa runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
+
+# Copiar los archivos publicados desde la etapa build
 COPY --from=build /app/out .
+
+# Exponer puertos HTTP y HTTPS
 EXPOSE 80
 EXPOSE 443
 
-ENTRYPOINT ["dotnet", "Api_estudiantes_test.dll"]
+# Comando para iniciar la aplicación
+ENTRYPOINT ["dotnet", "ControlEscolar.dll"]

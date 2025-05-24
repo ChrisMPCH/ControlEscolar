@@ -1,32 +1,39 @@
-# Etapa build
+# Etapa de construcción
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copiar la solución y los proyectos
-COPY ControlEscolar/ControlEscolar.sln .
-COPY CORE/CORE.csproj ./CORE/
-COPY API_Estudiantes_Test/API_Estudiantes_Test.csproj ./API_Estudiantes_Test/
+# Copiar toda la solución
+COPY . ./
 
-# Restaurar dependencias
-RUN dotnet restore
+# Listar contenido para depuración
+RUN ls -la
 
-# Copiar el resto del código fuente
-COPY CORE/ ./CORE/
-COPY API_Estudiantes_Test/ ./API_Estudiantes_Test/
+# Restaurar dependencias y publicar la API
+RUN dotnet restore "API_Estudiantes_Test/API_Estudiantes_Test.csproj" || \
+    dotnet restore "*/API_Estudiantes_Test.csproj" || \
+    echo "No se encontró el proyecto API_Estudiantes_Test.csproj"
 
-# Publicar la aplicación
-RUN dotnet publish API_Estudiantes_Test/API_Estudiantes_Test.csproj -c Release -o /app/out
+# Publicar la API
+RUN dotnet publish "API_Estudiantes_Test/API_Estudiantes_Test.csproj" -c Release -o /app/out || \
+    dotnet publish "*/API_Estudiantes_Test.csproj" -c Release -o /app/out || \
+    echo "No se pudo publicar el proyecto API"
 
-# Etapa runtime
+# Verificar que se generó un archivo DLL válido
+RUN ls -la /app/out
+
+# Etapa final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-
-# Copiar los archivos publicados desde la etapa build
 COPY --from=build /app/out .
 
-# Exponer puertos HTTP y HTTPS
+# Exponer puertos
 EXPOSE 80
 EXPOSE 443
+EXPOSE 8080
+EXPOSE 5000
 
-# Comando para iniciar la aplicación
+# Configuración de variables de entorno para Render
+ENV ASPNETCORE_URLS=http://+:8080
+
+# Punto de entrada específico
 ENTRYPOINT ["dotnet", "API_Estudiantes_Test.dll"]

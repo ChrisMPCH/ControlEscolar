@@ -2,16 +2,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copiar el proyecto API_Estudiantes_Test
-COPY API_Estudiantes_Test/API_Estudiantes_Test.csproj ./API_Estudiantes_Test/
-COPY CORE/CORE.csproj ./CORE/
+# Copiar todo el código fuente
+COPY . .
+
+# Listar contenido para depuración
+RUN ls -la
 
 # Restaurar dependencias
 RUN dotnet restore API_Estudiantes_Test/API_Estudiantes_Test.csproj
-
-# Copiar el resto del código fuente
-COPY API_Estudiantes_Test/ ./API_Estudiantes_Test/
-COPY CORE/ ./CORE/
 
 # Publicar la API
 RUN dotnet publish API_Estudiantes_Test/API_Estudiantes_Test.csproj -c Release -o /app/out

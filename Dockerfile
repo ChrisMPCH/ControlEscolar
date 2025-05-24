@@ -2,13 +2,16 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copiar archivo de proyecto y restaurar dependencias
-COPY ControlEscolar.csproj ./
+# Copiar archivos de solución y proyecto
+COPY *.sln .
+COPY API_Estudiantes_Test/*.csproj ./API_Estudiantes_Test/
 RUN dotnet restore
 
-# Copiar todo el código fuente y publicar en modo Release en /app/out
+# Copiar todo el código fuente
 COPY . ./
-RUN dotnet publish ControlEscolar.csproj -c Release -o /app/out
+
+# Publicar la aplicación
+RUN dotnet publish API_Estudiantes_Test/API_Estudiantes_Test.csproj -c Release -o /app/out
 
 # Etapa runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
@@ -22,4 +25,4 @@ EXPOSE 80
 EXPOSE 443
 
 # Comando para iniciar la aplicación
-ENTRYPOINT ["dotnet", "ControlEscolar.dll"]
+ENTRYPOINT ["dotnet", "API_Estudiantes_Test.dll"]

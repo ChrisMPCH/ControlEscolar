@@ -2,18 +2,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copiar archivos de solución y proyecto
-COPY *.sln .
-COPY CORE/CORE.csproj ./CORE/
-COPY API_Estudiantes_Test/API_Estudiantes_Test.csproj ./API_Estudiantes_Test/
-
-# Restaurar dependencias
-RUN dotnet restore
-
-# Copiar todo el código fuente
+# Copiar todo el código fuente primero
 COPY . .
 
-# Publicar la aplicación
+# Restaurar dependencias y publicar
+RUN dotnet restore
 RUN dotnet publish API_Estudiantes_Test/API_Estudiantes_Test.csproj -c Release -o /app/out
 
 # Etapa runtime

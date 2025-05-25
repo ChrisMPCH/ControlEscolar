@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlEscolar", "ControlEs
 		{D5731C0E-5492-25B1-FA4D-E8F72BDD01C6} = {D5731C0E-5492-25B1-FA4D-E8F72BDD01C6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\Core\Core.csproj", "{D5731C0E-5492-25B1-FA4D-E8F72BDD01C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlEscolarCore", "..\Core\ControlEscolarCore.csproj", "{D5731C0E-5492-25B1-FA4D-E8F72BDD01C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api_estudiantes_test", "..\Api_estudiantes_test\Api_estudiantes_test.csproj", "{BC6112FE-2691-90FE-5422-A05021B09347}"
 EndProject

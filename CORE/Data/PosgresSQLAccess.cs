@@ -52,20 +52,38 @@ namespace ControlEscolarCore.Data
         }
 
 
-        //Constructor privado para evitar instanciación directa
+        ////Constructor privado para evitar instanciación directa
+        //private PosgresSQLAccess()
+        //{
+        //    try
+        //    {
+        //        _connection = new NpgsqlConnection(_connectionString);
+        //        _logger.Info("Instancia de acceso a datos creada correctamente");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Fatal("Error al intentar conectar a la base de datos");
+        //        throw; //El throw sin argumentos mantiene la excepción original
+        //    }
+        //}
+
         private PosgresSQLAccess()
         {
             try
             {
-                _connection = new NpgsqlConnection(_connectionString);
+                if (string.IsNullOrEmpty(ConnectionString))
+                {
+                    throw new InvalidOperationException("La cadena de conexión no está configurada. Asegúrate de establecer PostgreSQLDataAccess.ConnectionString antes de usar la clase.");
+                }
+
+                _connection = new NpgsqlConnection(ConnectionString);
                 _logger.Info("Instancia de acceso a datos creada correctamente");
             }
             catch (Exception ex)
             {
-                _logger.Fatal("Error al intentar conectar a la base de datos");
-                throw; //El throw sin argumentos mantiene la excepción original
+                _logger.Fatal(ex, "Error al inicializar el acceso a la base de datos");
+                throw;
             }
-
         }
 
         //Método para obtener la instancia de la clase y asegurar que solo exista una

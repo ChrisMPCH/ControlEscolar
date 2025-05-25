@@ -21,7 +21,10 @@ namespace ControlEscolarCore.Data
         private static readonly Logger _logger = LoggingManager.GetLogger("ControlEscolar.Data.PostgreSQLDataAccess");
 
         //Cadena de conexión desde App.config
-        private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["ConexionBD"].ConnectionString;
+        //private static readonly string _ConnectionString = ConfigurationManager.ConnectionStrings["ConexionBD"].ConnectionString;
+
+        // Campo estático para almacenar la cadena de conexión
+        private static string _connectionString;
 
         private NpgsqlConnection _connection;
         private static PosgresSQLAccess? _instance;

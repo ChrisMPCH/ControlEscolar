@@ -29,6 +29,29 @@ namespace ControlEscolarCore.Data
         private NpgsqlConnection _connection;
         private static PosgresSQLAccess? _instance;
 
+        // Propiedad para establecer la cadena de conexión desde el API
+        public static string ConnectionString
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_connectionString))
+                {
+                    try
+                    {
+                        // Intenta obtener desde ConfigurationManager (Windows Forms)
+                        _connectionString = ConfigurationManager.ConnectionStrings["ConexionBD"]?.ConnectionString;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Warn(ex, "No se pudo obtener la cadena de conexión desde ConfigurationManager");
+                    }
+                }
+                return _connectionString;
+            }
+            set { _connectionString = value; }
+        }
+
+
         //Constructor privado para evitar instanciación directa
         private PosgresSQLAccess()
         {

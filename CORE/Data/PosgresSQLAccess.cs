@@ -29,6 +29,7 @@ namespace ControlEscolarCore.Data
         private NpgsqlConnection _connection;
         private static PosgresSQLAccess? _instance;
 
+
         // Propiedad para establecer la cadena de conexión desde el API
         public static string ConnectionString
         {
